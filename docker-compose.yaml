@@ -1,0 +1,55 @@
+version: "3.8"
+
+services:
+  lavalink:
+    image: fredboat/lavalink:latest
+    container_name: lava
+    configs:
+      - source: lava
+        target: /opt/Lavalink/application.yml
+    networks:
+      - lava_net
+    ports:
+      - "2333:2333"
+    restart: always
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_db:/data/db
+    env_file:
+      - ./env/mongo/.env
+    networks:
+      - mongo_net
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - redis_net
+    env_file:
+      - ./env/redis/.env
+    restart: always
+
+volumes:
+  mongo_db:
+    name: mongo_db
+    driver: local
+
+networks:
+  lava_net:
+    name: lava_net
+  mongo_net:
+    name: mongo_net
+  redis_net:
+    name: redis_net
+
+configs:
+  lava:
+    name: lava
+    file: ./application.yml

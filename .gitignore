@@ -1,0 +1,11 @@
+# Data
+data
+
+# Plot
+db
+
+# Environment
+.env
+
+# ANY
+application.yml
