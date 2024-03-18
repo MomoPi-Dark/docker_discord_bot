@@ -32,6 +32,8 @@ services:
       - "6379:6379"
     networks:
       - redis_net
+    volumes:
+      - redis_data:/data/redis
     env_file:
       - ./env/redis/.env
     restart: always
@@ -39,6 +41,9 @@ services:
 volumes:
   mongo_db:
     name: mongo_db
+    driver: local
+  redis_data:
+    name: redis_data
     driver: local
 
 networks:
