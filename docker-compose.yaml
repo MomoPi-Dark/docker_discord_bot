@@ -25,7 +25,7 @@ services:
       - ./env/mongo/.env
     networks:
       - mongo_net
-    command: ["mongod", "--sslMode=requireSSL", "--sslPEMKeyFile=/ssl/mongodb.pem", "--sslCAFile=/ssl/ca.pem"]
+    command: ["mongod", "--tlsMode=requireTLS", "--tlsCertificateKeyFile=/ssl/mongodb.pem", "--tlsCAFile=/ssl/ca.pem"]
 
   redis:
     image: redis:latest
