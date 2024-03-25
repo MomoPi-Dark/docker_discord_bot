@@ -20,6 +20,7 @@ services:
       - "27017:27017"
     volumes:
       - mongo_db:/data/db
+      - ./ssl:/ssl    # Mount SSL certificates directory
     env_file:
       - ./env/mongo/.env
     networks:
