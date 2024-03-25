@@ -25,8 +25,8 @@ services:
       - ./env/mongo/.env
     networks:
       - mongo_net
-    command: ["mongod", "--tlsMode=requireTLS", "--tlsCertificateKeyFile=/ssl/mongodb.pem"]
-    
+    command: ["mongod", "--tlsMode=requireTLS", "--tlsCertificateKeyFile=/ssl/mongodb.key", "--tlsCAFile=/ssl/mongodb.pem"]
+
   redis:
     image: redis:latest
     container_name: redis
