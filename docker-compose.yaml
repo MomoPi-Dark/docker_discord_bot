@@ -26,7 +26,6 @@ services:
       - ./env/mongo/.env
     networks:
       - mongo_net
-    command: ["mongod", "--config", "/data/mongodb.conf"]
 
   redis:
     image: redis:latest
