@@ -21,12 +21,12 @@ services:
     volumes:
       - ./data/mongo_db:/data/db
       - ./ssl:/data/ssl    # Mount SSL certificates directory
-      - ./mongodb.conf:/etc/mongodb.conf
+      - ./mongodb.conf:/data/mongodb.conf
     env_file:
       - ./env/mongo/.env
     networks:
       - mongo_net
-    command: ["mongod", "--config", "/etc/mongodb.conf"]
+    command: ["mongod", "--config", "/data/mongodb.conf"]
 
   redis:
     image: redis:latest
