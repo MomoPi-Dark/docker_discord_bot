@@ -20,12 +20,12 @@ services:
       - "27017:27017"
     volumes:
       - ./data/mongo_db:/data/db
-      - ./ssl:/ssl    # Mount SSL certificates directory
+      - ./ssl:/data/ssl    # Mount SSL certificates directory
     env_file:
       - ./env/mongo/.env
     networks:
       - mongo_net
-    command: ["mongod", "--tlsMode=requireTLS", "--tlsCertificateKeyFile=/ssl/mongodb.pem", "--tlsCAFile=/ssl/ca.pem"]
+    command: ["mongod", "--tlsMode=requireTLS", "--tlsCertificateKeyFile=/data/ssl/mongodb.pem", "--tlsCAFile=/data/ssl/ca.pem"]
 
   redis:
     image: redis:latest
