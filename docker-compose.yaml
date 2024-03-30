@@ -51,13 +51,13 @@ volumes:
 networks:
   lava_net:
     name: lava_net
-    external: true
+    external: false
   mongo_net:
     name: mongo_net
-    external: true
+    external: false
   redis_net:
     name: redis_net
-    external: true
+    external: false
 
 configs:
   lava:
