@@ -2,16 +2,23 @@ version: "3.8"
 
 services:
   lavalink:
-    image: fredboat/lavalink:latest
+    image: fredboat/lavalink:latest # pin the image version to Lavalink v4
     container_name: lava
-    configs:
-      - source: lava
-        target: ./opt/Lavalink/application.yml
-    networks:
-      - lava_net
-    ports:
-      - "2333:2333"
     restart: always
+    env_file:
+      - ./env/lavalink/.env
+    volumes:
+        - ./application.yml:/opt/Lavalink/application.yml # mount application.yml from the same directory or use environment variables
+        - ./plugins/:/opt/Lavalink/plugins/ # persist plugins between restarts, make sure to set the correct permissions (user: 322, group: 322)
+    networks:
+        - lava_net
+    expose:
+        - 2333 # lavalink exposes port 2333 to connect to for other containers (this is for documentation purposes only)
+    ports:
+        - 2333:2333 # you only need this if you want to make your lavalink accessible from outside of containers
+    configs:
+        - source: lava_config
+          target: ./opt/Lavalink/application.yml
 
   mongodb:
     image: mongo:latest
@@ -51,15 +58,12 @@ volumes:
 networks:
   lava_net:
     name: lava_net
-    external: false
   mongo_net:
     name: mongo_net
-    external: false
   redis_net:
     name: redis_net
-    external: false
 
 configs:
-  lava:
-    name: lava
+  lava_config:
+    name: lava_config
     file: ./application.yml
