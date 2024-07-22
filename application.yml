@@ -10,7 +10,7 @@ lavalink:
 #    - dependency: "group:artifact:version"
 #      repository: "repository"
   server:
-    password: "gamflaz"
+    password: ""
     sources:
       youtube: true
       bandcamp: true
