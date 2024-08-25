@@ -1,60 +1,70 @@
+version: '3.8'
+
 services:
   lavalink:
-    image: fredboat/lavalink:4-alpine # pin the image version to Lavalink v4
-    container_name: lava
+    image: fredboat/lavalink:4-alpine # Pin the image version to Lavalink v4
+    container_name: lavalink
     restart: always
+    cpus: 2
+    mem_limit: 1048M
+    mem_reservation: 512M
     env_file:
       - ./env/lavalink/.env
     volumes:
-      - ./application.yml:/opt/Lavalink/application.yml # mount application.yml from the same directory or use environment variables
-      - ./plugins/:/opt/Lavalink/plugins/ # persist plugins between restarts, make sure to set the correct permissions (user: 322, group: 322)
+      - ./application.yml:/opt/Lavalink/application.yml # Mount application.yml or use environment variables
+      - ./plugins:/opt/Lavalink/plugins # Persist plugins between restarts, ensure correct permissions (user: 322, group: 322)
     networks:
-      - lava_net
-    expose:
-      - 2333
+      - lava_network
     ports:
-      - '127.0.0.1:2333:2333'
+      - '127.0.0.1:2333:2333' # Forward port 2333 to localhost
 
   mongodb:
     image: mongo:latest
     container_name: mongodb
+    restart: always
+    cpus: 2
+    mem_limit: 2048M
+    mem_reservation: 512M
     ports:
       - '127.0.0.1:27017:27017'
     volumes:
-      - ./data/mongo_db:/data/db
+      - mongo_data:/data/db
       - ./ssl:/data/ssl
-      - ./config/mongodb.conf:/data/mongodb.conf
+      - ./config/mongodb.conf:/etc/mongo/mongodb.conf
     env_file:
       - ./env/mongo/.env
     networks:
-      - mongo_net
+      - mongo_network
 
   redis:
     image: redis:latest
     container_name: redis
+    cpus: 2
+    mem_limit: 2048M
+    mem_reservation: 512M
     ports:
       - '127.0.0.1:6379:6379'
-    networks:
-      - redis_net
     volumes:
-      - ./data/redis_data:/data/redis
+      - redis_data:/data/redis
     env_file:
       - ./env/redis/.env
     restart: always
+    networks:
+      - redis_network
 
 volumes:
-  mongo_db:
-    name: mongo_db
+  mongo_data:
     driver: local
   redis_data:
-    name: redis_data
     driver: local
 
 networks:
-  lava_net:
-    name: lava_net
-  mongo_net:
-    name: mongo_net
-  redis_net:
-    name: redis_net
-
+  lava_network:
+    driver: bridge
+    external: false
+  mongo_network:
+    driver: bridge
+    external: false
+  redis_network:
+    driver: bridge
+    external: false

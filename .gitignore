@@ -5,5 +5,7 @@ data
 db
 
 # Environment
-.env
+.env*
 trash
+plugins
+ssl
