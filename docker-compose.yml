@@ -2,10 +2,10 @@ version: '3.8'
 
 services:
   lavalink:
-    image: fredboat/lavalink:4-alpine # Pin the image version to Lavalink v4
+    image: fredboat/lavalink:4-alpine
     container_name: lavalink
     restart: always
-    cpus: 2
+    cpus: 4
     mem_limit: 1048M
     mem_reservation: 512M
     env_file:
@@ -16,7 +16,7 @@ services:
     networks:
       - lava_network
     ports:
-      - '127.0.0.1:2333:2333' # Forward port 2333 to localhost
+      - '127.0.0.1:2333:2333' 
 
   mongodb:
     image: mongo:latest
@@ -26,11 +26,11 @@ services:
     mem_limit: 2048M
     mem_reservation: 512M
     ports:
-      - '127.0.0.1:27017:27017'
+      - '127.0.0.1:27017:27017'  
     volumes:
-      - mongo_data:/data/db
-      - ./ssl:/data/ssl
-      - ./config/mongodb.conf:/etc/mongo/mongodb.conf
+      - ./data/mongo_db:/data/db
+      - ./ssl:/data/ssl:ro  
+      - ./config/mongodb.conf:/etc/mongo/mongodb.conf:ro  
     env_file:
       - ./env/mongo/.env
     networks:
@@ -45,26 +45,43 @@ services:
     ports:
       - '127.0.0.1:6379:6379'
     volumes:
-      - redis_data:/data/redis
+      - ./data/redis_data:/data/redis
     env_file:
       - ./env/redis/.env
     restart: always
     networks:
       - redis_network
 
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    restart: always
+    cpus: 2
+    mem_limit: 2048M
+    mem_reservation: 512M
+    ports:
+      - '127.0.0.1:5432:5432'
+    volumes:
+      - ./data/postgres_data:/var/lib/postgresql/db
+    env_file:
+      - ./env/postgres/.env
+    networks:
+      - postgres_network
+
 volumes:
   mongo_data:
     driver: local
   redis_data:
     driver: local
+  postgres_data:
+    driver: local
 
 networks:
   lava_network:
     driver: bridge
-    external: false
   mongo_network:
     driver: bridge
-    external: false
   redis_network:
     driver: bridge
-    external: false
+  postgres_network:
+    driver: bridge
